@@ -1,7 +1,7 @@
 ﻿/*----------------------------------------------------------
             create time 2015-12-27 04:34 pm
 -----------------------------------------------------------*/
-MaMoly = {
+var MaMoly = {
     import: function (filename) {
         var model, path, obj = new this.ByElement('Tag:head'), ext, save;
         if (!isArray(filename)) {
@@ -20,44 +20,7 @@ MaMoly = {
             }
         }
     },
-    typeOf: function (value) {
-        var o = Object.prototype.toString.call(value).split(" ")[1],
-            m = o.substr(0, o.length - 1);
-        if (m.substr(0, 4) == 'HTML') {
-            return MaMoly.model.objectStyle["Object"][2];
-        }else if (MaMoly.model.setObjectStyle(m) == MaMoly.model.objectStyle["Object"]) {
-            if (undefined !== value.nodeType) {
-                if (3 == val.nodeType) {
-                    return (/\S/).test(value.nodeValue) ? MaMoly.model.objectStyle["Object"][0] : MaMoly.model.objectStyle["Object"][1];
-                } else {
-                    return MaMoly.model.objectStyle["Object"][2];
-                }
-            } else {
-                return MaMoly.model.objectStyle["Object"][3];
-            }
-        } else {
-            return MaMoly.model.setObjectStyle(m);
-        }
-    },
-    ByElement : function (obj) {
-        this.obj = isString(obj) ? this.init(obj) : obj;
+    M: function (obj) {
+        return new byElement(obj);
     }
-}
-MaMoly.ByElement.prototype = {
-    init: function (obj) {
-        var a = obj.split(":");
-        this.obj = document[MaMoly.model.M[a[0]]](a[1]);
-        return this.obj;
-    },
-    on: function (value,callBack) {
-        MaMoly.view.Incident(this.obj, value, callBack);
-    },
-    css:function(){
-        setValGet(this.obj, css);
-    },
-    CreateElement: function (ele, css) {
-        this.Node = document.createElement(ele);
-        setValGet(this.Node, css);
-        MaMoly.view.addChild(this.obj[0], this.Node);
-    },
 }

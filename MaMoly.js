@@ -21,4 +21,4 @@ var MaMoly = {
         }
     },
 }
-MaMoly.defimgport(["MaMolyJS/SandyBridge/controller/controller.js", "MaMolyJS/SandyBridge/view/view.js", "MaMolyJS/SandyBridge/model/model.js", "MaMolyJS/function/function.js"]);
+MaMoly.defimgport(["MaMolyJS/SandyBridge/controller/controller.js", "MaMolyJS/SandyBridge/view/view.js", "MaMolyJS/SandyBridge/model/model.js", "MaMolyJS/function/function.js", "MaMolyJS/MaMolyClass/animate_Class.js"]);

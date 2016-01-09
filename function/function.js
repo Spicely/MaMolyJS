@@ -59,6 +59,46 @@
     function getExt(filename) {                                /* [获取后缀名称] {    string     } */
         return filename.split(".").pop();
     }
+    function Incident(obj, Event, callBack) {                  /* [事件绑定]     { Object , Event , callBack } */
+        if (this.isEleArr(obj)) {
+            for (var e = 0 ; e < obj.length;) {
+                obj[e++][Event] = callBack;
+            }
+        } else obj[Event] = callBack;
+    }
+    function foreach(obj, callback, args) {                    /* [遍历对象]     { Object , function , value } */
+        var e, i = 0, length = obj.length, isEleAr = isEleArr(obj);
+        try{
+            if (args) {
+                if (isEleAr) {
+                    for (; i < length;i++) {
+                        e = callback.apply(obj[i], args);
+                        if (e === false) break;
+                    }
+                } else {
+                    for (i in obj) {
+                        e = callback.apply(obj[i], args);
+                        if (e === false) break;
+                    }
+                }
+            } else {
+                if (isEleAr) {
+                    for (; i < length;i++) {
+                        e = callback.call(obj[i], i, obj[i]);
+                        if (e === false) break;
+                    }
+                } else {
+                    for (i in obj) {
+                        e = callback.call(obj[i], i, obj[i]);
+                        if (e === false) break;
+                    }
+                }
+            }
+        }catch(e){
+            throw new Error('this function foreach(); Object || function || value error');
+        }
+        return obj;
+    }
     function bound(obj, attr, val) {                           /* [参数绑定]     { Object , attrAbute , value } */
         var i = 0, length = val.length, result = [];
         if (isEleArr(obj)) {
@@ -74,105 +114,6 @@
             } else {
                 result = obj[attr](val[0]);
                 return result;
-            }
-        }
-    }
-    function setValGet(obj, value) {
-        var result = [], ArrayRes = [];
-        if (this.isEle(obj) && !this.isEleArr(obj)) {          // 单个绑定
-            for (var e in value) {
-                switch (e) {
-                    case "css":
-                        if (isArray(value[e]) || typeOf(value[e]) == "string") {
-                            if (isArray(value[e]) && typeOf(value[e][0]) == "string") {
-                                for (var v = 0 ; v < value[e].length; v++) {
-                                    result[v] = obj.style[value[e][v]];
-                                }
-                                return result;
-                            } else {
-                                result = obj[L].style[value[e]];
-                                return result;
-                            }
-                        } else {
-                            for (var i in value[e]) obj.style[i] = value[e][i];
-                        }; break;
-                    case "attr":
-                        if (isArray(value[e]) || typeOf(value[e]) == "string") {
-                            if (isArray(value[e]) && typeOf(value[e][0]) == "string") {
-                                for (var v = 0 ; v < value[e].length; v++) {
-                                    result[v] = obj[value[e][v]];
-                                }
-                                return result;
-                            } else {
-                                result = obj[value[e]];
-                                return result;
-                            }
-                        } else {
-                            for (var i in value[e]) bound(obj, 'setAttribute', [i, value[e][i]]);
-                        }; break;
-                }
-            }
-        } else if (this.isEle(obj) && this.isEleArr(obj)) {   // 多个绑定        
-            for (var e in value) {
-                switch (e) {
-                    case "css":
-                        if (isArray(value[e]) || typeOf(value[e]) == "string") {
-                            if (isArray(value[e]) && typeOf(value[e][0]) == "string") {
-                                for (var L = 0 ; L < obj.length; L++) {
-                                    for (var v = 0 ; v < value[e].length; v++) {
-                                        result[v] = obj[L].style[value[e][v]];
-                                    }
-                                    ArrayRes[L] = result;
-                                }
-                                return ArrayRes;
-                            } else if (isArray(value[e]) && isObj(value[e][0])) {
-                                for (var L = 0 ; L < value[e].length; L++) {
-                                    for (var i in value[e][L]) obj[L].style[i] = value[e][L][i];
-                                }
-                            } else {
-                                for (var L = 0 ; L < obj.length ; L++) {
-                                    result[L] = obj[L].style[value[e]];
-                                }
-                                return result;
-                            }
-                        } else {
-                            for (var L = 0 ; L < obj.length ; L++) {
-                                for (var i in value[e]) obj[L].style[[i]] = value[e][i];
-                            }
-                        }; break;
-                    case "attr":
-                        if (isArray(value[e]) || typeOf(value[e]) == "string") {
-                            if (isArray(value[e]) && typeOf(value[e][0]) == "string") {
-                                for (var L = 0 ; L < obj.length; L++) {
-                                    for (var v = 0 ; v < value[e].length; v++) {
-                                        result[v] = obj[L][value[e][v]];
-                                    }
-                                    ArrayRes[L] = result;
-                                }
-                                return ArrayRes;
-                            } else if (isArray(value[e]) && isObj(value[e][0])) {
-                                for (var L = 0 ; L < value[e].length; L++) {
-                                    for (var i in value[e][L]) obj[L][i] = value[e][L][i];
-                                }
-                            } else {
-                                for (var L = 0 ; L < obj.length ; L++) {
-                                    result[L] = obj[L][value[e]];
-                                }
-                                return result;
-                            }
-                        } else {
-                            var length = obj.length;
-                            for (var L = 0 ; L < length ; L++) {
-                                for (var i in value[e]) {
-                                    if (i == 'className') {
-                                        bound(obj[0], 'setAttribute', ['class', value[e][i]])
-                                    } else {
-                                        bound(obj[0], 'setAttribute', [i, value[e][i]]);
-                                    }
-                                }
-                            }
-                        }; break;
-                }
             }
         }
     }
