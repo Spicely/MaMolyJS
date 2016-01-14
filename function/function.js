@@ -35,6 +35,7 @@
                 return 'unknow';
         }
     }
+    /*---------------------------------- type boolean ------------------------------*/
     function isArray(val) {                                     /* [定义数组检测] { true || false } */
         return typeOf(val) == 'array' ? true : false;
     }
@@ -56,6 +57,10 @@
     function isString(val) {                                   /* [字符串检测]   { true || false } */
         return typeOf(val) == "string" ? true : false;
     }
+    function isNull(val) {
+        return typeOf(val) == "null" ? true : false;
+    }
+    /*---------------------------------- end ----------------------------------*/
     function getExt(filename) {                                /* [获取后缀名称] {    string     } */
         return filename.split(".").pop();
     }
@@ -115,5 +120,18 @@
                 result = obj[attr](val[0]);
                 return result;
             }
+        }
+    }
+    function jsonForValue(jsoninit, json) {                    /* [值修改｜创建]     { json , json } */
+        for (var e in json) {
+            if (isNull(json[e]) && isObj(json[e]) && !isArray(json[e])) {
+                this.jsonForValue(jsoninit[e], json[e]);
+            } else if (isNull(json[e]) && isArray(json[e])) {
+                for (var i = 0 ; i < json[e].length; e++) {
+                    if (isObj(json[e][i]) && !isArray(ojson[e][i])) jsoninit[e][i] == json[e][i];
+                    else jsonForValue(jsoninit[e][i], json[e][i]);
+                }
+            }
+            else jsoninit[e] = json[e];
         }
     }
