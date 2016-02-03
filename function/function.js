@@ -1,69 +1,6 @@
 ﻿/*---------------------------------------------------------------
                 create time 2015-12-31 02:08 AM
  ---------------------------------------------------------------*/
-    function typeOf(val) {
-        var o = Object.prototype.toString.call(val).split(" ")[1],
-            m = o.substr(0, o.length - 1);
-        if (null === val)  return 'null';
-        var type = typeof val;
-        if ('undefined' === type || 'string' === type) return type;
-        if (m.substr(0, 4) == 'HTML') return 'element';
-        switch (m) {
-            case 'Array':
-                return 'array';
-            case 'Date':
-                return 'date';
-            case 'Boolean':
-                return 'boolean';
-            case 'Number':
-                return 'number';
-            case 'Function':
-                return 'function';
-            case 'RegExp':
-                return 'regexp';
-            case 'Object':
-                if (undefined !== val.nodeType) {
-                    if (3 == val.nodeType) {
-                        return (/\S/).test(val.nodeValue) ? 'textnode' : 'whitespace';
-                    } else {
-                        return 'element';
-                    }
-                } else {
-                    return 'object';
-                }
-            default:
-                return 'unknow';
-        }
-    }
-    /*---------------------------------- type boolean ------------------------------*/
-    function isArray(val) {                                     /* [定义数组检测] { true || false } */
-        return typeOf(val) == 'array' ? true : false;
-    }
-    function isObj(val) {                                       /* [定义对象检测] { true || false } */
-        return typeOf(val) == 'object' ? true : false;
-    }
-    function isObjArr(val) {                                    /* [对象数组检测] { true || false } */
-        return isObj(val) ? val.length ? true : false : false;
-    }
-    function isEle(val) {                                      /* [节点对象检测] { true || false } */
-        return typeOf(val) == 'element' ? true : false;
-    }
-    function isEleArr(val) {                                   /* [节点数组检测] { true || false } */
-        return isEle(val) ? val.length ? true : false : false;
-    }
-    function isFunction(val) {                                 /* [函数检测]     { true || false } */
-        return typeOf(val) == 'function' ? true : false;
-    }
-    function isString(val) {                                   /* [字符串检测]   { true || false } */
-        return typeOf(val) == "string" ? true : false;
-    }
-    function isNull(val) {
-        return typeOf(val) == "null" ? true : false;
-    }
-    /*---------------------------------- end ----------------------------------*/
-    function getExt(filename) {                                /* [获取后缀名称] {    string     } */
-        return filename.split(".").pop();
-    }
     function Incident(obj, Event, callBack) {                  /* [事件绑定]     { Object , Event , callBack } */
         if (this.isEleArr(obj)) {
             for (var e = 0 ; e < obj.length;) {
@@ -135,3 +72,4 @@
             else jsoninit[e] = json[e];
         }
     }
+   

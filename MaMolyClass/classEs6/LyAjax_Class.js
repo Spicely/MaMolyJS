@@ -10,9 +10,12 @@ class LyAjax {
                 "url"   : null,
                 "success":function(){},
                 "error" : function () { },
-                "asyn"  : false,
+                "asyn"  : true,
                 "type"  : "get",
-                "sendfn": function(){}
+                "timeout": 500,
+                "data": null,
+                "contentType": "application/x-www-form-urlencoded",
+                "sendfn": null //
             },
             "jsonObect" : null,
             init: function () {
@@ -23,34 +26,44 @@ class LyAjax {
                     this.jsonObect = new XMLHttpRequest();
                 }
             },
-            jsonForValue: function (json, option) {                              //完成后删除 于function.js  jsonForValue
-                for (var e in option) {
-                    if (option[e] !== null && typeof option[e] == "object" && !option[e] instanceof Array) {
-                        this.jsonForValue(json[e], option[e]);
-                    } else if (option[e] !== null && option[e] instanceof Array) {
-                        for (var i = 0 ; i < option[e].length; e++) {
-                            if (typeof option[e][i] == "object" && !option[e][i] instanceof Array) json[e][i] == option[e][i];
-                            else this.jsonForValue(json[e][i], option[e][i]);
+            dataValueToHttpRequest: function (data) {
+                if (isObj(data)) {
+                    var dataString = '';
+                    for (var e in data) {
+                        if (isArray(data[e])) {
+                            for (var i = 0 ; i < data[e].length; i++) {
+                                console.log(e, data[e][i]);
+                                dataString +=  e + '=' + data[e][i] + '&';
+                            }
+                        } else {
+                             dataString += e + '=' + data[e] + '&';
                         }
                     }
-                    else json[e] = option[e];
+                    return dataString.substring(0,dataString.length-1);
+                } else if (isString) {
+                    return data;
                 }
             },
-            open: function (style, url, asyn) {
-                this.jsonObect.open(style, url, asyn);
+            header: function (contentType) {
+                this.jsonObect.setRequestHeader("Content-type", contentType);
             },
-            send: function( callback) {
-                this.jsonObect.send(callback);
+            open: function (method, url, asyn) {
+                if (this.call.type == 'get') url += '?' + this.dataValueToHttpRequest(this.call.data);
+                this.jsonObect.open(method, url, asyn, null, null);
+                if (this.call.type == 'post') this.header(this.call.contentType);
+            },
+            send: function (callback) {
+                if (this.call.type == 'post') this.jsonObect.send(this.dataValueToHttpRequest(this.call.data));
+                else this.jsonObect.send(callback);
             }
         }
         var jsonObject = this.jsonInit;
-        jsonObject.jsonForValue(jsonObject.call, jsoninit);
-        //jsonForValue(jsonObject.call, jsoninit);
+        jsonForValue(jsonObject.call, jsoninit);
         jsonObject.init();
         if (jsonObject.call.url != null) {
             this.LyAjaxRequest(jsonObject.call.success);
             jsonObject.open(jsonObject.call.type, jsonObject.call.url, jsonObject.call.asyn);
-            jsonObject.send(jsonObject.call.request);
+            jsonObject.send();
         }
     }
     LyAjaxRequest( callback ) {
@@ -62,12 +75,14 @@ class LyAjax {
             }
         }
     }
-    get( url , asyn , callback) {
+    get(url, data, asyn, callback) {
+        url += this.dataValueToHttpRequest(this.call.data);
         this.jsonInit.open("get", url, asyn);
         this.jsonInit.send(callback);
     }
-    post( url , asyn , callback ) {
+    post(url, data, asyn, contentType) {
         this.jsonInit.open("post", url, asyn);
-        this.jsonInit.send(callback);
+        !contentType ? this.jsonInit.header(this.jsonInit.call.contentType) : this.jsonInit.header(contentType);
+        this.jsonInit.send(this.jsonInit.dataValueToHttpRequest(data));
     }
 }
