@@ -1,14 +1,14 @@
 ﻿/*---------------------------------------------------------------
                 create time 2015-12-31 02:08 AM
  ---------------------------------------------------------------*/
-    function Incident(obj, Event, callBack) {                  /* [事件绑定]     { Object , Event , callBack } */
-        if (this.isEleArr(obj)) {
-            for (var e = 0 ; e < obj.length;) {
-                obj[e++][Event] = callBack;
-            }
-        } else obj[Event] = callBack;
+    function Incident(object, Event, callback) {                  /* [事件绑定]     { Object , Event , callBack } */
+        object = (object.length !== undefined && object) || [object];
+        for (var e = 0 ; e < object.length ; e++) {
+            object[e].index = e;
+            object[e][Event] = callback;
+        }
     }
-    function foreach(obj, callback, args) {                    /* [遍历对象]     { Object , function , value } */
+    function foreach(obj, callback, args) {                       /* [遍历对象]     { Object , function , value } */
         var e, i = 0, length = obj.length, isEleAr = isEleArr(obj);
         try{
             if (args) {
@@ -41,21 +41,30 @@
         }
         return obj;
     }
-    function bound(obj, attr, val) {                           /* [参数绑定]     { Object , attrAbute , value } */
-        var i = 0, length = val.length, result = [];
-        if (isEleArr(obj)) {
-            if (isArray(val)) {
-                for (; i < length;i++) obj[i][attr](val[0], val[1]);
-            }else{
-                for (; i < length; i++) result[i] = obj[attr](val[0]);
-                return result;
-            }
-        } else {
-            if (val.length > 1) {
-                obj[attr](val[0], val[1]);
+    function boundStyle(object, sty, val , attr) {                   /* [参数绑定]     { Object , attrAbute , value } */
+        var Gathet = [];
+        object = (object.length !== undefined && object) || [object];
+        for (var e = 0; e < object.length; e++) {
+            if (!attr) {
+                if (!val) {
+                    if (isObj(sty)) for (var i in sty) object[e].style[i] = sty[i];
+                    else {
+                        if (object[e].style[sty] == '' || object[e].style[sty] == 'undefined') {
+                           Gathet[e] =  window.getComputedStyle(object[e])[sty];
+                        } else {
+                            return object[e].style[sty];
+                        }
+                    }
+                } else {
+                    object[e].style[sty] = val;
+                }
             } else {
-                result = obj[attr](val[0]);
-                return result;
+                if (!val) {
+                    if (isObj(sty)) for (var i in sty) object[e].setAttribute(i,sty[i]);
+                    else return object[e].getAttribute(sty);
+                } else {
+                    object[e].setAttribute(sty, val);
+                }
             }
         }
     }
@@ -70,6 +79,15 @@
                 }
             }
             else jsoninit[e] = json[e];
+        }
+    }
+    function fairly(object, fair, value) {                   /* [判断对象]  ｛ object Array ｝*/
+        object = (object.length !== undefined && object) || [object];
+        var menu = []
+        switch(fair){
+            case "eq": for (var e = 0; e < object.length; e++) if (e == value) return object[e];
+            case "lt" : for (var e = 0; e < object.length; e++) if (e < value) menu.push(object[e]); return menu;
+            case "gt" : for (var e = 0; e < object.length; e++) if (e > value) menu.push(object[e]); return menu;
         }
     }
    

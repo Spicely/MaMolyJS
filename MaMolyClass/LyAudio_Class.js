@@ -181,7 +181,7 @@ class LyAudio {
             }
             viewObject.innerHTML += viewStr;
         }
-        viewObj = document.getElementsByClassName(classObject);             // [因单线程 故重新绑定事件]
+        viewObj = document.getElementsByClassName(classObject);             /* [因单线程 故重新绑定事件] */
         for (var e = 0; e < viewN; e++) {
             viewObj[e].index = e;
             viewObj[e].ondblclick = function () {

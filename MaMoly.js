@@ -20,7 +20,7 @@
                 }
             }
         }
-    }
+    };
     function typeOf(val) {
         var o = Object.prototype.toString.call(val).split(" ")[1],
             m = o.substr(0, o.length - 1);
@@ -84,7 +84,7 @@
     function getExt(filename) {                                /* [获取后缀名称] {    string     } */
         return filename.split(".").pop();
     }
-    function require(HttpUrl, callback, asyn , tagView ) {
+    function require(HttpUrl, callback, asyn , tagView ) {     /* [加载文件] 异步 ｜ 同步 { callback }*/
         asyn = !asyn ? false : asyn;
         tagView = !tagView ? false : tagView;
         var head = document.getElementsByTagName("head").item(0) || document.documentElement,
@@ -129,6 +129,9 @@
         asyn ? parallelLoad() : seriesLoad(this.LOADNUM);
     }
    /*------------------------------------     文件载入 开始应用 -----------------------------*/
-    require(["MaMolyJS/function/function.js", "css/AdminIndex.css"], function () {
-        console.log(this.LOADNUM)
-    }, false)
+    //console.log(s)
+    require(["MaMolyJS/function/function.js",
+        "MaMolyJS/SandyBridge/controller/controller.js",
+        "MaMolyJS/SandyBridge/model/model.js",
+        "MaMolyJS/SandyBridge/view/view.js",
+        "MaMolyJS/MaMolyClass/classEs5/LybyElement_Class.js"], null, true,true)

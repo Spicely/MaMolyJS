@@ -1,26 +1,23 @@
 ﻿/*----------------------------------------------------------
             create time 2015-12-27 04:34 pm
 -----------------------------------------------------------*/
+"use strict";
 var MaMoly = {
-    import: function (filename) {
-        var model, path, obj = new this.ByElement('Tag:head'), ext, save;
-        if (!isArray(filename)) {
-            model = filename.split(":"), ext = MaMoly.model.ExtTag[getExt(filename)];
-            path = model.length < 2 ? filename : MaMoly.model.Path + MaMoly.model.extend[model[0]] + model[1];
-            save = ext.attr;
-            save[ext.pathTag] = path;
-            obj.CreateElement(ext.Tag, { attr: save });
-        } else {
-            for (var e = 0; e < filename.length; e++) {
-                model = filename[e].split(":"), ext = MaMoly.model.ExtTag[getExt(filename[e])];
-                path = model.length < 2 ? filename[e] : MaMoly.model.Path + MaMoly.model.extend[model[0]] + model[1];
-                save = ext.attr;
-                save[ext.pathTag] = path;
-                obj.CreateElement(ext.Tag, { attr: save});
-            }
+    HandViewBox: function ( jsonStyle ) {
+       var jsonInit = {
+            "ContClass" : null,
+            "ViewClass" : null,
+            "Event"     : "DE_CLICK",
+            "CallBack"  : null,
+            "ViewAnimation":null,
         }
-    },
-    M: function (obj) {
-        return new byElement(obj);
+       jsonForValue(jsonInit, jsonStyle);
+       var animation = jsonInit.ViewAnimation === null ? 'css("display", "inline-block")' : jsonInit.ViewAnimation;
+       var viewText = 'LybyElement("Class:" + jsonInit.ViewClass)';
+       eval(viewText + '.css("display", "none").eq(0).' + animation);
+        LybyElement("Class:" + jsonInit.ContClass).on(jsonInit.Event, function () {
+            var ViewNum = LybyElement(this).index();
+            eval(viewText + '.css("display", "none").eq(' + ViewNum + ').' + animation);
+        })
     }
 }
