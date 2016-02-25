@@ -5,7 +5,8 @@
         object = (object.length !== undefined && object) || [object];
         for (var e = 0 ; e < object.length ; e++) {
             object[e].index = e;
-            object[e][Event] = callback;
+            if(!Event) object[e][Event]();
+            else object[e][Event] = callback;
         }
     }
     function foreach(obj, callback, args) {                       /* [遍历对象]     { Object , function , value } */
@@ -42,31 +43,22 @@
         return obj;
     }
     function boundStyle(object, sty, val , attr) {                   /* [参数绑定]     { Object , attrAbute , value } */
-        var Gathet = [];
+        var Gathet = '';
         object = (object.length !== undefined && object) || [object];
         for (var e = 0; e < object.length; e++) {
-            if (!attr) {
-                if (!val) {
-                    if (isObj(sty)) for (var i in sty) object[e].style[i] = sty[i];
-                    else {
-                        if (object[e].style[sty] == '' || object[e].style[sty] == 'undefined') {
-                           Gathet[e] =  window.getComputedStyle(object[e])[sty];
-                        } else {
-                            return object[e].style[sty];
-                        }
-                    }
-                } else {
-                    object[e].style[sty] = val;
+            if(!val){
+                if(!val) Gathet = object[e][sty];
+                else object[e][sty] = val;
+            }else{
+                if(isObj(sty)) for (var i in sty) object[e][attr][i] = sty[i];
+                else if(!val) {
+                    if(object[e][attr][sty] == '' || object[e][attr][sty] == 'undefined')Gathet[e] = window.getComputedStyle(object[e])[sty];
+                    else Gathet = object[e][attr][sty];
                 }
-            } else {
-                if (!val) {
-                    if (isObj(sty)) for (var i in sty) object[e].setAttribute(i,sty[i]);
-                    else return object[e].getAttribute(sty);
-                } else {
-                    object[e].setAttribute(sty, val);
-                }
+                else object[e][attr][sty] = val;
             }
-        }
+       }
+       return Gathet;
     }
     function jsonForValue(jsoninit, json) {                    /* [值修改｜创建]     { json , json } */
         for (var e in json) {

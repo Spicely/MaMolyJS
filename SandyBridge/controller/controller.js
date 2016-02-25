@@ -13,11 +13,15 @@ var MaMoly = {
         }
        jsonForValue(jsonInit, jsonStyle);
        var animation = jsonInit.ViewAnimation === null ? 'css("display", "inline-block")' : jsonInit.ViewAnimation;
-       var viewText = 'LybyElement("Class:" + jsonInit.ViewClass)';
+       var viewText = 'MaMo("Class:" + jsonInit.ViewClass)';
        eval(viewText + '.css("display", "none").eq(0).' + animation);
-        LybyElement("Class:" + jsonInit.ContClass).on(jsonInit.Event, function () {
+        MaMo("Class:" + jsonInit.ContClass).on(jsonInit.Event, function () {
             var ViewNum = LybyElement(this).index();
             eval(viewText + '.css("display", "none").eq(' + ViewNum + ').' + animation);
         })
+    },
+    Validator: function(){                                /* [直接调用 参数写在 MaMolyTable 属性中] */
+      var object = MaMo("Tag:form");
+
     }
 }
